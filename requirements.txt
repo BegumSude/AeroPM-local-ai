@@ -1,0 +1,8 @@
+foundry-local-sdk
+openai
+pypdf
+python-docx
+numpy
+pandas
+streamlit
+pytest

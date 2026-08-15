@@ -1,0 +1,12 @@
+.claude
+örnek.md
+microsoft_foundry_local_rag_detayli_anlatim.md
+
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+backend/database/rag.db
+data/documents/*
+!data/documents/.gitkeep
