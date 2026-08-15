@@ -1,0 +1,1 @@
+Bu bir test metin dosyasidir. Local RAG uygulamasi icin ornek girdi olarak kullanilir.
