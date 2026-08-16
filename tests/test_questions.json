@@ -1,0 +1,30 @@
+[
+  {
+    "question": "Yuklenen belgede chunk boyutu ile ilgili hangi bilgi veriliyor?",
+    "category": "cevabi_belgede_var"
+  },
+  {
+    "question": "Belgede test icerigi olarak hangi ifade geciyor?",
+    "category": "cevabi_belgede_var"
+  },
+  {
+    "question": "Mars gezegenindeki ortalama sicaklik kactir?",
+    "category": "cevabi_belgede_yok"
+  },
+  {
+    "question": "Sirketin 2030 yili gelir hedefi nedir?",
+    "category": "cevabi_belgede_yok"
+  },
+  {
+    "question": "Bu konu hakkinda ne dusunuyorsun?",
+    "category": "belirsiz_genel"
+  },
+  {
+    "question": "Anlat bana her seyi.",
+    "category": "belirsiz_genel"
+  },
+  {
+    "question": "",
+    "category": "bos_soru"
+  }
+]
