@@ -54,6 +54,32 @@ def _sample_file_bytes():
     return ("sample.txt", ("Bu bir test belgesidir. " * 50).encode("utf-8"), "text/plain")
 
 
+def test_create_collection_success(client):
+    response = client.post("/collections", json={"name": "koleksiyon"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["name"] == "koleksiyon"
+    assert isinstance(body["id"], int)
+
+
+def test_create_collection_empty_name_returns_400(client):
+    response = client.post("/collections", json={"name": "   "})
+
+    assert response.status_code == 400
+
+
+def test_list_collections_returns_created_collections(client):
+    client.post("/collections", json={"name": "a"})
+    client.post("/collections", json={"name": "b"})
+
+    response = client.get("/collections")
+
+    assert response.status_code == 200
+    names = [item["name"] for item in response.json()]
+    assert names == ["a", "b"]
+
+
 def test_upload_document_success(client, collection_id, documents_dir):
     response = client.post(
         "/documents/upload",
