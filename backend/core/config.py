@@ -3,6 +3,6 @@ CHUNK_OVERLAP = 150
 
 DB_PATH = "backend/database/rag.db"
 
-EMBEDDING_MODEL_ALIAS = "all-MiniLM-L6-v2"
+EMBEDDING_MODEL_ALIAS = "qwen3-embedding-0.6b"
 
-CHAT_MODEL_ALIAS = "Phi-3.5-mini-instruct"
+CHAT_MODEL_ALIAS = "phi-3.5-mini"
