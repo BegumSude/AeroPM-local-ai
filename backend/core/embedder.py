@@ -19,8 +19,8 @@ def _get_embedding_client():
     if not FOUNDRY_LOCAL_AVAILABLE:
         raise RuntimeError("foundry-local-sdk kurulu degil")
 
-    config = Configuration(app_name="local-rag")
-    FoundryLocalManager.initialize(config)
+    if FoundryLocalManager.instance is None:
+        FoundryLocalManager.initialize(Configuration(app_name="local-rag"))
     manager = FoundryLocalManager.instance
 
     model = manager.catalog.get_model(EMBEDDING_MODEL_ALIAS)
@@ -36,5 +36,6 @@ def embed_texts(texts: list[str]) -> np.ndarray:
         return np.empty((0, 0), dtype=np.float32)
 
     client = _get_embedding_client()
-    embeddings = client.embed(texts)
+    response = client.generate_embeddings(texts)
+    embeddings = [item.embedding for item in response.data]
     return np.array(embeddings, dtype=np.float32)

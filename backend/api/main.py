@@ -23,6 +23,10 @@ app.add_middleware(
 )
 
 
+class CreateCollectionRequest(BaseModel):
+    name: str
+
+
 class AskQuestionRequest(BaseModel):
     collection_id: int
     question: str
@@ -39,6 +43,35 @@ def _raise_from_value_error(error: ValueError) -> None:
     if str(error).startswith("collection bulunamadi"):
         raise HTTPException(status_code=404, detail=str(error)) from error
     raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/collections")
+def create_collection(request: CreateCollectionRequest) -> dict:
+    if not request.name or not request.name.strip():
+        raise HTTPException(status_code=400, detail="name bos olamaz")
+
+    connection = get_connection(DB_PATH)
+    try:
+        collection_id = connection.execute(
+            "INSERT INTO collections (name) VALUES (?)", (request.name,)
+        ).lastrowid
+        connection.commit()
+        row = connection.execute(
+            "SELECT id, name, created_at FROM collections WHERE id = ?", (collection_id,)
+        ).fetchone()
+        return dict(row)
+    finally:
+        connection.close()
+
+
+@app.get("/collections")
+def list_collections() -> list[dict]:
+    connection = get_connection(DB_PATH)
+    try:
+        rows = connection.execute("SELECT id, name, created_at FROM collections ORDER BY id").fetchall()
+        return [dict(row) for row in rows]
+    finally:
+        connection.close()
 
 
 @app.post("/documents/upload")

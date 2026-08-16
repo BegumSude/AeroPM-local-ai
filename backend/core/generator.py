@@ -20,8 +20,8 @@ def _get_chat_client():
     if not FOUNDRY_LOCAL_AVAILABLE:
         raise RuntimeError("foundry-local-sdk kurulu degil")
 
-    config = Configuration(app_name="local-rag")
-    FoundryLocalManager.initialize(config)
+    if FoundryLocalManager.instance is None:
+        FoundryLocalManager.initialize(Configuration(app_name="local-rag"))
     manager = FoundryLocalManager.instance
 
     model = manager.catalog.get_model(CHAT_MODEL_ALIAS)
@@ -57,4 +57,5 @@ def generate_answer(question: str, context_chunks: list[dict]) -> str:
 
     messages = build_messages(question, context_chunks)
     client = _get_chat_client()
-    return client.complete_chat(messages)
+    completion = client.complete_chat(messages)
+    return completion.choices[0].message.content
