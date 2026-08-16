@@ -10,3 +10,5 @@ __pycache__/
 backend/database/rag.db
 data/documents/*
 !data/documents/.gitkeep
+
+tests/evaluation_results.json
