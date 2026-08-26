@@ -59,3 +59,17 @@ def generate_answer(question: str, context_chunks: list[dict]) -> str:
     client = _get_chat_client()
     completion = client.complete_chat(messages)
     return completion.choices[0].message.content
+
+
+def generate_structured(system_prompt: str, user_content: str) -> str:
+    client = _get_chat_client()
+    original_format = client.settings.response_format
+    client.settings.response_format = {"type": "json_object"}
+    try:
+        completion = client.complete_chat([
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_content},
+        ])
+        return completion.choices[0].message.content
+    finally:
+        client.settings.response_format = original_format
