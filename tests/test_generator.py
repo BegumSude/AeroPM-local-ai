@@ -5,6 +5,7 @@ from backend.core.generator import (
     NO_CONTEXT_ANSWER,
     build_messages,
     generate_answer,
+    generate_structured,
 )
 from backend.prompts.system_prompts import SYSTEM_PROMPT
 
@@ -53,3 +54,44 @@ def test_generate_answer_returns_answer_for_question_with_context():
     result = generate_answer("test sorusu", context_chunks)
     assert isinstance(result, str)
     assert result != ""
+
+
+class _FakeSettings:
+    def __init__(self):
+        self.response_format = {"type": "text"}
+
+
+class _FakeMessage:
+    def __init__(self, content):
+        self.content = content
+
+
+class _FakeChoice:
+    def __init__(self, content):
+        self.message = _FakeMessage(content)
+
+
+class _FakeCompletion:
+    def __init__(self, content):
+        self.choices = [_FakeChoice(content)]
+
+
+class _FakeChatClient:
+    def __init__(self):
+        self.settings = _FakeSettings()
+        self.response_format_during_call = None
+
+    def complete_chat(self, messages):
+        self.response_format_during_call = self.settings.response_format
+        return _FakeCompletion('{"result": "ok"}')
+
+
+def test_generate_structured_restores_response_format_after_call(monkeypatch):
+    fake_client = _FakeChatClient()
+    monkeypatch.setattr("backend.core.generator._get_chat_client", lambda: fake_client)
+
+    result = generate_structured("system prompt", "user content")
+
+    assert result == '{"result": "ok"}'
+    assert fake_client.response_format_during_call == {"type": "json_object"}
+    assert fake_client.settings.response_format == {"type": "text"}
